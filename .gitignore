@@ -18,3 +18,4 @@ coverage/
 !.vscode/settings.json
 
 .prisma/
+apps/api/src/generated/prisma/
