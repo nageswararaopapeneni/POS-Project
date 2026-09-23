@@ -1,6 +1,6 @@
+@"
 node_modules/
 .pnpm-store/
-
 .next/
 dist/
 build/
@@ -11,7 +11,6 @@ coverage/
 !.env.example
 
 *.log
-
 .DS_Store
 
 .vscode/*
@@ -19,3 +18,4 @@ coverage/
 
 .prisma/
 apps/api/src/generated/prisma/
+"@ | Set-Content .gitignore
