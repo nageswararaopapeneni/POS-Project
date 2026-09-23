@@ -9,3 +9,4 @@ export * from "./ports/payment-repository";
 export * from "./business";
 export * from "./product";
 export * from "./sale";
+export * from "./payment";
