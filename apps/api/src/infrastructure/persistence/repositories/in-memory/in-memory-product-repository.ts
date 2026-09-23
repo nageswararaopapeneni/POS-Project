@@ -1,46 +1,52 @@
 import type {
-  ProductRecord,
-  ProductRepository,
+  CreateReceiptRecord,
+  ReceiptRecord,
+  ReceiptRepository,
 } from "../../../../application";
 
-export class InMemoryProductRepository implements ProductRepository {
-  private readonly products = new Map<string, ProductRecord>();
+export class InMemoryReceiptRepository implements ReceiptRepository {
+  private readonly receipts = new Map<string, ReceiptRecord>();
 
-  async create(product: ProductRecord): Promise<ProductRecord> {
-    this.products.set(product.id, product);
-    return product;
+  async create(input: CreateReceiptRecord): Promise<ReceiptRecord> {
+    const now = new Date();
+
+    const receipt: ReceiptRecord = {
+      id: crypto.randomUUID(),
+      businessId: input.businessId,
+      saleId: input.saleId,
+      receiptNumber: input.receiptNumber,
+      createdAt: now,
+      updatedAt: now,
+    };
+
+    this.receipts.set(receipt.id, receipt);
+
+    return receipt;
   }
 
-  async findById(id: string): Promise<ProductRecord | null> {
-    return this.products.get(id) ?? null;
-  }
-
-  async findByBarcode(
+  async findById(
     businessId: string,
-    barcode: string,
-  ): Promise<ProductRecord | null> {
-    for (const product of this.products.values()) {
-      if (
-        product.businessId === businessId &&
-        product.barcode === barcode
-      ) {
-        return product;
-      }
+    receiptId: string,
+  ): Promise<ReceiptRecord | null> {
+    const receipt = this.receipts.get(receiptId);
+
+    if (!receipt || receipt.businessId !== businessId) {
+      return null;
     }
 
-    return null;
+    return receipt;
   }
 
-  async findBySku(
+  async findBySaleId(
     businessId: string,
-    sku: string,
-  ): Promise<ProductRecord | null> {
-    for (const product of this.products.values()) {
+    saleId: string,
+  ): Promise<ReceiptRecord | null> {
+    for (const receipt of this.receipts.values()) {
       if (
-        product.businessId === businessId &&
-        product.sku === sku
+        receipt.businessId === businessId &&
+        receipt.saleId === saleId
       ) {
-        return product;
+        return receipt;
       }
     }
 
