@@ -15,6 +15,7 @@ model Business {
 
   products Product[]
   sales    Sale[]
+  receipts Receipt[]
 
   @@index([name])
 }
@@ -50,9 +51,10 @@ model Sale {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  business Business   @relation(fields: [businessId], references: [id])
+  business Business @relation(fields: [businessId], references: [id])
   items    SaleItem[]
   payments Payment[]
+  receipt  Receipt?
 
   @@index([businessId])
   @@index([businessId, createdAt])
@@ -88,4 +90,20 @@ model Payment {
 
   @@index([businessId])
   @@index([saleId])
+}
+
+model Receipt {
+  id            String   @id @default(uuid())
+  businessId    String
+  saleId        String   @unique
+  receiptNumber String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  business Business @relation(fields: [businessId], references: [id])
+  sale     Sale     @relation(fields: [saleId], references: [id])
+
+  @@unique([businessId, receiptNumber])
+  @@index([businessId])
+  @@index([businessId, receiptNumber])
 }
