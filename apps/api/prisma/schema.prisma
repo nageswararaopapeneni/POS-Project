@@ -16,8 +16,29 @@ model Business {
   products Product[]
   sales    Sale[]
   receipts Receipt[]
+  users    User[]
 
   @@index([name])
+}
+
+model User {
+  id           String   @id @default(uuid())
+  businessId   String
+  branchId     String?
+  userId       String
+  name         String
+  role         String
+  status       String   @default("active")
+  passwordHash String?
+  pinHash      String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  business Business @relation(fields: [businessId], references: [id])
+
+  @@unique([businessId, userId])
+  @@index([businessId])
+  @@index([businessId, status])
 }
 
 model Product {

@@ -1,16 +1,18 @@
 import type { Provider } from "@nestjs/common";
-import {
+import type {
   BusinessRepository,
   PaymentRepository,
   ProductRepository,
   ReceiptRepository,
   SaleRepository,
+  UserRepository,
 } from "../../../../application";
+import { PrismaBusinessRepository } from "./prisma-business-repository";
 import { PrismaPaymentRepository } from "./prisma-payment-repository";
 import { PrismaProductRepository } from "./prisma-product-repository";
-import { PrismaSaleRepository } from "./prisma-sale-repository";
-import { PrismaBusinessRepository } from "./prisma-business-repository";
 import { PrismaReceiptRepository } from "./prisma-receipt-repository";
+import { PrismaSaleRepository } from "./prisma-sale-repository";
+import { PrismaUserRepository } from "./prisma-user-repository";
 import { REPOSITORY_TOKENS } from "./prisma-repository.tokens";
 
 export const prismaRepositoryProviders: Provider[] = [
@@ -34,6 +36,10 @@ export const prismaRepositoryProviders: Provider[] = [
     provide: REPOSITORY_TOKENS.receipt,
     useClass: PrismaReceiptRepository,
   },
+  {
+    provide: REPOSITORY_TOKENS.user,
+    useClass: PrismaUserRepository,
+  },
 ];
 
 export const repositoryExports = [
@@ -42,6 +48,7 @@ export const repositoryExports = [
   REPOSITORY_TOKENS.sale,
   REPOSITORY_TOKENS.payment,
   REPOSITORY_TOKENS.receipt,
+  REPOSITORY_TOKENS.user,
 ];
 
 export type RepositoryProviderContracts = {
@@ -50,4 +57,5 @@ export type RepositoryProviderContracts = {
   sale: SaleRepository;
   payment: PaymentRepository;
   receipt: ReceiptRepository;
+  user: UserRepository;
 };
