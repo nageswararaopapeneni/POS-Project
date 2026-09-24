@@ -1,12 +1,13 @@
-import {
-  ApplicationError,
-  ApplicationResult,
-  BusinessRepository,
-  CreateBusinessRecord,
-  success,
-} from "../index";
-import { CreateBusinessInput } from "./business-input";
-import { BusinessOutput } from "./business-output";
+import { ApplicationError } from "../common/application-error";
+import type { BusinessRepository } from "../ports/business-repository";
+import type { CreateBusinessInput } from "./create-business-input";
+
+export interface CreateBusinessOutput {
+  readonly id: string;
+  readonly name: string;
+  readonly createdAt: Date;
+  readonly updatedAt: Date;
+}
 
 export class CreateBusinessUseCase {
   constructor(
@@ -15,42 +16,20 @@ export class CreateBusinessUseCase {
 
   async execute(
     input: CreateBusinessInput,
-  ): Promise<ApplicationResult<BusinessOutput>> {
+  ): Promise<CreateBusinessOutput> {
     const name = input.name.trim();
 
     if (!name) {
-      return {
-        success: false,
-        error: new ApplicationError(
-          "VALIDATION_ERROR",
-          "Business name is required.",
-        ),
-      };
+      throw new ApplicationError(
+        "VALIDATION_ERROR",
+        "Business name is required",
+      );
     }
 
-    const existing = await this.businessRepository.findByName(name);
-
-    if (existing) {
-      return {
-        success: false,
-        error: new ApplicationError(
-          "CONFLICT",
-          "A business with this name already exists.",
-        ),
-      };
-    }
-
-    const record: CreateBusinessRecord = {
+    const business = await this.businessRepository.create({
       name,
-    };
-
-    const business = await this.businessRepository.create(record);
-
-    return success({
-      id: business.id,
-      name: business.name,
-      createdAt: business.createdAt,
-      updatedAt: business.updatedAt,
     });
+
+    return business;
   }
 }
