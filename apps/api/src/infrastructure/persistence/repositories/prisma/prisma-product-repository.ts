@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import type {
+  CreateProductRecord,
   ProductRecord,
   ProductRepository,
 } from "../../../../application";
@@ -10,18 +11,16 @@ import { decimalToNumber } from "../../prisma";
 export class PrismaProductRepository implements ProductRepository {
   constructor(private readonly prisma: PrismaClientService) {}
 
-  async create(product: ProductRecord): Promise<ProductRecord> {
+  async create(
+    product: CreateProductRecord,
+  ): Promise<ProductRecord> {
     const created = await this.prisma.product.create({
       data: {
-        id: product.id,
         businessId: product.businessId,
         name: product.name,
         sku: product.sku,
         barcode: product.barcode,
         price: product.price,
-        active: product.active,
-        createdAt: product.createdAt,
-        updatedAt: product.updatedAt,
       },
     });
 
@@ -38,9 +37,15 @@ export class PrismaProductRepository implements ProductRepository {
     };
   }
 
-  async findById(id: string): Promise<ProductRecord | null> {
-    const product = await this.prisma.product.findUnique({
-      where: { id },
+  async findById(
+    businessId: string,
+    productId: string,
+  ): Promise<ProductRecord | null> {
+    const product = await this.prisma.product.findFirst({
+      where: {
+        id: productId,
+        businessId,
+      },
     });
 
     if (!product) {
