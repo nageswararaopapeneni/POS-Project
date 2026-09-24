@@ -4,6 +4,7 @@ export * from "./common/application-result";
 export * from "./auth";
 export * from "./business";
 export * from "./product";
+export * from "./sale";
 export * from "./receipt";
 
 export * from "./ports/business-repository";

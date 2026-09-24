@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import type {
+  CreateSaleRecord,
   SaleRecord,
   SaleRepository,
 } from "../../../../application";
@@ -10,18 +11,17 @@ import { decimalToNumber } from "../../prisma";
 export class PrismaSaleRepository implements SaleRepository {
   constructor(private readonly prisma: PrismaClientService) {}
 
-  async create(sale: SaleRecord): Promise<SaleRecord> {
+  async create(
+    sale: CreateSaleRecord,
+  ): Promise<SaleRecord> {
     const created = await this.prisma.sale.create({
       data: {
-        id: sale.id,
         businessId: sale.businessId,
         branchId: sale.branchId,
-        status: sale.status,
+        status: "completed",
         subtotal: sale.subtotal,
         discount: sale.discount,
         total: sale.total,
-        createdAt: sale.createdAt,
-        updatedAt: sale.updatedAt,
         items: {
           create: sale.items.map((item) => ({
             productId: item.productId,
@@ -60,9 +60,15 @@ export class PrismaSaleRepository implements SaleRepository {
     };
   }
 
-  async findById(id: string): Promise<SaleRecord | null> {
-    const sale = await this.prisma.sale.findUnique({
-      where: { id },
+  async findById(
+    businessId: string,
+    saleId: string,
+  ): Promise<SaleRecord | null> {
+    const sale = await this.prisma.sale.findFirst({
+      where: {
+        id: saleId,
+        businessId,
+      },
       include: {
         items: {
           include: {
