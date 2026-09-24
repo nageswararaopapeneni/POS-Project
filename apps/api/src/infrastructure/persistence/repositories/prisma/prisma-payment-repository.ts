@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import type {
+  CreatePaymentRecord,
   PaymentRecord,
   PaymentRepository,
   PaymentStatus,
@@ -16,26 +17,31 @@ function toPaymentStatus(status: string): PaymentStatus {
       return status;
 
     default:
-      throw new Error(`Unsupported payment status: ${status}`);
+      throw new Error(
+        `Unsupported payment status: ${status}`,
+      );
   }
 }
 
 @Injectable()
-export class PrismaPaymentRepository implements PaymentRepository {
-  constructor(private readonly prisma: PrismaClientService) {}
+export class PrismaPaymentRepository
+  implements PaymentRepository
+{
+  constructor(
+    private readonly prisma: PrismaClientService,
+  ) {}
 
-  async create(payment: PaymentRecord): Promise<PaymentRecord> {
+  async create(
+    payment: CreatePaymentRecord,
+  ): Promise<PaymentRecord> {
     const created = await this.prisma.payment.create({
       data: {
-        id: payment.id,
         businessId: payment.businessId,
         saleId: payment.saleId,
         amount: payment.amount,
         method: payment.method,
         status: payment.status,
         reference: payment.reference,
-        createdAt: payment.createdAt,
-        updatedAt: payment.updatedAt,
       },
     });
 
@@ -52,9 +58,15 @@ export class PrismaPaymentRepository implements PaymentRepository {
     };
   }
 
-  async findById(id: string): Promise<PaymentRecord | null> {
-    const payment = await this.prisma.payment.findUnique({
-      where: { id },
+  async findById(
+    businessId: string,
+    paymentId: string,
+  ): Promise<PaymentRecord | null> {
+    const payment = await this.prisma.payment.findFirst({
+      where: {
+        id: paymentId,
+        businessId,
+      },
     });
 
     if (!payment) {
@@ -74,11 +86,20 @@ export class PrismaPaymentRepository implements PaymentRepository {
     };
   }
 
-  async findBySaleId(saleId: string): Promise<PaymentRecord[]> {
-    const payments = await this.prisma.payment.findMany({
-      where: { saleId },
-      orderBy: { createdAt: "asc" },
-    });
+  async findBySaleId(
+    businessId: string,
+    saleId: string,
+  ): Promise<readonly PaymentRecord[]> {
+    const payments =
+      await this.prisma.payment.findMany({
+        where: {
+          businessId,
+          saleId,
+        },
+        orderBy: {
+          createdAt: "asc",
+        },
+      });
 
     return payments.map((payment) => ({
       id: payment.id,

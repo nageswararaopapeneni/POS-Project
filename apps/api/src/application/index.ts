@@ -5,6 +5,7 @@ export * from "./auth";
 export * from "./business";
 export * from "./product";
 export * from "./sale";
+export * from "./payment";
 export * from "./receipt";
 
 export * from "./ports/business-repository";

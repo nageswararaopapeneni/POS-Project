@@ -2,8 +2,8 @@ import {
   ApplicationError,
   ApplicationResult,
   PaymentRepository,
-  CreatePaymentRecord,
   SaleRepository,
+  CreatePaymentRecord,
   success,
 } from "../index";
 import { CreatePaymentInput } from "./payment-input";
@@ -11,8 +11,8 @@ import { PaymentOutput } from "./payment-output";
 
 export class CreatePaymentUseCase {
   constructor(
-    private readonly paymentRepository: PaymentRepository,
     private readonly saleRepository: SaleRepository,
+    private readonly paymentRepository: PaymentRepository,
   ) {}
 
   async execute(
@@ -22,7 +22,6 @@ export class CreatePaymentUseCase {
     const saleId = input.saleId.trim();
     const method = input.method.trim();
     const reference = input.reference?.trim() || null;
-    const status = input.status ?? "pending";
 
     if (!businessId) {
       return {
@@ -44,22 +43,22 @@ export class CreatePaymentUseCase {
       };
     }
 
-    if (!method) {
-      return {
-        success: false,
-        error: new ApplicationError(
-          "VALIDATION_ERROR",
-          "Payment method is required.",
-        ),
-      };
-    }
-
     if (!Number.isFinite(input.amount) || input.amount <= 0) {
       return {
         success: false,
         error: new ApplicationError(
           "VALIDATION_ERROR",
           "Payment amount must be greater than zero.",
+        ),
+      };
+    }
+
+    if (!method) {
+      return {
+        success: false,
+        error: new ApplicationError(
+          "VALIDATION_ERROR",
+          "Payment method is required.",
         ),
       };
     }
@@ -79,12 +78,12 @@ export class CreatePaymentUseCase {
       };
     }
 
-    if (input.amount > sale.total) {
+    if (sale.status !== "completed") {
       return {
         success: false,
         error: new ApplicationError(
           "BUSINESS_RULE_VIOLATION",
-          "Payment amount cannot exceed the sale total.",
+          "Payment can only be recorded for a completed sale.",
         ),
       };
     }
@@ -99,12 +98,14 @@ export class CreatePaymentUseCase {
       .filter((payment) => payment.status === "successful")
       .reduce((total, payment) => total + payment.amount, 0);
 
-    if (successfulAmount + input.amount > sale.total) {
+    const remainingAmount = sale.total - successfulAmount;
+
+    if (input.amount > remainingAmount) {
       return {
         success: false,
         error: new ApplicationError(
           "BUSINESS_RULE_VIOLATION",
-          "Total successful payments cannot exceed the sale total.",
+          "Payment amount cannot exceed the remaining sale balance.",
         ),
       };
     }
@@ -114,7 +115,7 @@ export class CreatePaymentUseCase {
       saleId,
       amount: input.amount,
       method,
-      status,
+      status: "successful",
       reference,
     };
 
