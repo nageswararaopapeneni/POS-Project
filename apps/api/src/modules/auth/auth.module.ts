@@ -1,20 +1,19 @@
 import { Module } from "@nestjs/common";
 import {
   AuthenticateUserUseCase,
-  PasswordVerifier,
-  UserRepository,
+  type PasswordVerifier,
+  type UserRepository,
 } from "../../application";
 import { ScryptPasswordVerifier } from "../../infrastructure/auth/scrypt-password-verifier";
-import { PrismaRepositoryModule } from "../../infrastructure/persistence/repositories/prisma";
+import { PrismaRepositoryModule } from "../../infrastructure/persistence/repositories/prisma/prisma-repository.module";
 import { REPOSITORY_TOKENS } from "../../infrastructure/persistence/repositories/prisma/prisma-repository.tokens";
+import { AuthController } from "./auth.controller";
 
 @Module({
   imports: [PrismaRepositoryModule],
+  controllers: [AuthController],
   providers: [
-    {
-      provide: ScryptPasswordVerifier,
-      useClass: ScryptPasswordVerifier,
-    },
+    ScryptPasswordVerifier,
     {
       provide: AuthenticateUserUseCase,
       useFactory: (
