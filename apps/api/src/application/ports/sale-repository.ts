@@ -42,5 +42,11 @@ export interface SaleRepository {
     saleId: string,
   ): Promise<SaleRecord | null>;
 
+  findMany(
+    businessId: string,
+    limit: number,
+    offset: number,
+  ): Promise<readonly SaleRecord[]>;
+
   create(input: CreateSaleRecord): Promise<SaleRecord>;
 }

@@ -4,7 +4,9 @@ import { BusinessModule } from "./modules/business";
 import { HealthModule } from "./modules/health";
 import { PaymentModule } from "./modules/payment";
 import { ProductModule } from "./modules/product";
+import { ReceiptModule } from "./modules/receipt";
 import { SaleModule } from "./modules/sale";
+import { SalesHistoryModule } from "./modules/sales-history";
 
 @Module({
   imports: [
@@ -14,6 +16,8 @@ import { SaleModule } from "./modules/sale";
     ProductModule,
     SaleModule,
     PaymentModule,
+    ReceiptModule,
+    SalesHistoryModule,
   ],
 })
 export class AppModule {}

@@ -11,7 +11,30 @@ export class InMemorySaleRepository implements SaleRepository {
     return sale;
   }
 
-  async findById(id: string): Promise<SaleRecord | null> {
-    return this.sales.get(id) ?? null;
+  async findById(
+    businessId: string,
+    saleId: string,
+  ): Promise<SaleRecord | null> {
+    const sale = this.sales.get(saleId);
+
+    if (!sale || sale.businessId !== businessId) {
+      return null;
+    }
+
+    return sale;
+  }
+
+  async findMany(
+    businessId: string,
+    limit: number,
+    offset: number,
+  ): Promise<readonly SaleRecord[]> {
+    return Array.from(this.sales.values())
+      .filter((sale) => sale.businessId === businessId)
+      .sort(
+        (a, b) =>
+          b.createdAt.getTime() - a.createdAt.getTime(),
+      )
+      .slice(offset, offset + limit);
   }
 }

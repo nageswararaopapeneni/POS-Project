@@ -7,6 +7,7 @@ export * from "./product";
 export * from "./sale";
 export * from "./payment";
 export * from "./receipt";
+export * from "./sales-history";
 
 export * from "./ports/business-repository";
 export * from "./ports/product-repository";
