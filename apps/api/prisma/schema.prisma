@@ -18,6 +18,8 @@ model Business {
   receipts Receipt[]
   users    User[]
   reconciliations Reconciliation[]
+  cashDrawerEvents CashDrawerEvent[]
+  
 
   @@index([name])
 }
@@ -76,6 +78,7 @@ model Sale {
   business Business @relation(fields: [businessId], references: [id])
   items    SaleItem[]
   payments Payment[]
+  cashDrawerEvents CashDrawerEvent[]
   receipt  Receipt?
 
   @@index([businessId])
@@ -153,4 +156,28 @@ model Reconciliation {
   @@unique([businessId, businessDate])
   @@index([businessId])
   @@index([businessId, businessDate])
+}
+
+model CashDrawerEvent {
+  id              String   @id @default(uuid())
+  businessId      String
+  branchId        String?
+  deviceId        String?
+  userId          String?
+  eventType       String
+  reason          String
+  saleId          String?
+  exceptionStatus String   @default("none")
+  openedAt        DateTime?
+  closedAt        DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  business Business @relation(fields: [businessId], references: [id])
+  sale     Sale?    @relation(fields: [saleId], references: [id])
+
+  @@index([businessId])
+  @@index([businessId, createdAt])
+  @@index([businessId, exceptionStatus])
+  @@index([saleId])
 }

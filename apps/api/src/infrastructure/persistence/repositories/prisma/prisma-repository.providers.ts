@@ -8,6 +8,7 @@ import type {
   ReportRepository,
   SaleRepository,
   UserRepository,
+  CashDrawerRepository,
 } from "../../../../application";
 import { PrismaBusinessRepository } from "./prisma-business-repository";
 import { PrismaPaymentRepository } from "./prisma-payment-repository";
@@ -18,6 +19,7 @@ import { PrismaReportRepository } from "./prisma-report-repository";
 import { PrismaSaleRepository } from "./prisma-sale-repository";
 import { PrismaUserRepository } from "./prisma-user-repository";
 import { REPOSITORY_TOKENS } from "./prisma-repository.tokens";
+import { PrismaCashDrawerRepository } from "./prisma-cash-drawer-repository";
 
 export const prismaRepositoryProviders: Provider[] = [
   {
@@ -52,6 +54,10 @@ export const prismaRepositoryProviders: Provider[] = [
     provide: REPOSITORY_TOKENS.reconciliation,
     useClass: PrismaReconciliationRepository,
   },
+  {
+  provide: REPOSITORY_TOKENS.cashDrawer,
+  useClass: PrismaCashDrawerRepository,
+  },
 ];
 
 export const repositoryExports = [
@@ -63,6 +69,7 @@ export const repositoryExports = [
   REPOSITORY_TOKENS.user,
   REPOSITORY_TOKENS.report,
   REPOSITORY_TOKENS.reconciliation,
+  REPOSITORY_TOKENS.cashDrawer,
 ];
 
 export type RepositoryProviderContracts = {
@@ -74,4 +81,5 @@ export type RepositoryProviderContracts = {
   user: UserRepository;
   report: ReportRepository;
   reconciliation: ReconciliationRepository;
+  cashDrawer: CashDrawerRepository;
 };
