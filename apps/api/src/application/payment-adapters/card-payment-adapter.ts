@@ -16,6 +16,8 @@ export class CardPaymentAdapter implements PaymentAdapter {
   ): Promise<PaymentAdapterResult> {
     return {
       status: "successful",
+      provider: request.provider ?? null,
+      externalReference: request.externalReference ?? null,
       reference: request.reference ?? null,
     };
   }

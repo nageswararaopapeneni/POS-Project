@@ -10,7 +10,9 @@ export interface PaymentRecord {
   readonly saleId: string;
   readonly amount: number;
   readonly method: string;
+  readonly provider?: string | null;
   readonly status: PaymentStatus;
+  readonly externalReference?: string | null;
   readonly reference?: string | null;
   readonly createdAt: Date;
   readonly updatedAt: Date;
@@ -21,7 +23,9 @@ export interface CreatePaymentRecord {
   readonly saleId: string;
   readonly amount: number;
   readonly method: string;
+  readonly provider?: string | null;
   readonly status: PaymentStatus;
+  readonly externalReference?: string | null;
   readonly reference?: string | null;
 }
 

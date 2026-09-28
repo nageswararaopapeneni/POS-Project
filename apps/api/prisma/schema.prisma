@@ -101,20 +101,24 @@ model SaleItem {
 }
 
 model Payment {
-  id          String   @id @default(uuid())
-  businessId  String
-  saleId      String
-  amount      Decimal  @db.Decimal(12, 2)
-  method      String
-  status      String
-  reference   String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id               String   @id @default(uuid())
+  businessId       String
+  saleId           String
+  amount           Decimal  @db.Decimal(12, 2)
+  method           String
+  provider         String?
+  status           String
+  externalReference String?
+  reference        String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 
   sale Sale @relation(fields: [saleId], references: [id])
 
   @@index([businessId])
   @@index([saleId])
+  @@index([businessId, provider])
+  @@index([businessId, externalReference])
 }
 
 model Receipt {

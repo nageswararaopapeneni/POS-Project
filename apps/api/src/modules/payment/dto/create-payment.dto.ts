@@ -21,5 +21,13 @@ export class CreatePaymentDto {
 
   @IsOptional()
   @IsString()
+  provider?: string | null;
+
+  @IsOptional()
+  @IsString()
+  externalReference?: string | null;
+
+  @IsOptional()
+  @IsString()
   reference?: string | null;
 }

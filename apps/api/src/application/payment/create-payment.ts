@@ -26,6 +26,9 @@ export class CreatePaymentUseCase {
     const businessId = input.businessId.trim();
     const saleId = input.saleId.trim();
     const method = input.method.trim().toLowerCase();
+    const provider = input.provider?.trim() || null;
+    const externalReference =
+      input.externalReference?.trim() || null;
     const reference = input.reference?.trim() || null;
 
     if (!businessId) {
@@ -131,6 +134,8 @@ export class CreatePaymentUseCase {
         saleId,
         amount: input.amount,
         method,
+        provider,
+        externalReference,
         reference,
       });
 
@@ -139,7 +144,10 @@ export class CreatePaymentUseCase {
       saleId,
       amount: input.amount,
       method,
+      provider: adapterResult.provider ?? provider,
       status: adapterResult.status,
+      externalReference:
+        adapterResult.externalReference ?? externalReference,
       reference: adapterResult.reference ?? reference,
     };
 
@@ -151,7 +159,9 @@ export class CreatePaymentUseCase {
       saleId: payment.saleId,
       amount: payment.amount,
       method: payment.method,
+      provider: payment.provider,
       status: payment.status,
+      externalReference: payment.externalReference,
       reference: payment.reference,
       createdAt: payment.createdAt,
       updatedAt: payment.updatedAt,

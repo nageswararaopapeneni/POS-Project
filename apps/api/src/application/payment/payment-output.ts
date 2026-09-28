@@ -6,7 +6,9 @@ export interface PaymentOutput {
   readonly saleId: string;
   readonly amount: number;
   readonly method: string;
+  readonly provider: string | null | undefined;
   readonly status: PaymentStatus;
+  readonly externalReference: string | null | undefined;
   readonly reference: string | null | undefined;
   readonly createdAt: Date;
   readonly updatedAt: Date;

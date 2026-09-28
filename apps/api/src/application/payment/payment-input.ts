@@ -3,6 +3,8 @@ export interface CreatePaymentInput {
   readonly saleId: string;
   readonly amount: number;
   readonly method: string;
+  readonly provider?: string | null;
+  readonly externalReference?: string | null;
   readonly reference?: string | null;
 }
 

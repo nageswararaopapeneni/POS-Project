@@ -6,11 +6,15 @@ export interface PaymentAdapterRequest {
   readonly saleId: string;
   readonly amount: number;
   readonly method: PaymentMethod;
+  readonly provider?: string | null;
+  readonly externalReference?: string | null;
   readonly reference?: string | null;
 }
 
 export interface PaymentAdapterResult {
   readonly status: PaymentStatus;
+  readonly provider?: string | null;
+  readonly externalReference?: string | null;
   readonly reference?: string | null;
 }
 
