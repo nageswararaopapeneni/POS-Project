@@ -3,3 +3,4 @@ export * from "./payment-output";
 export * from "./create-payment";
 export * from "./get-payment";
 export * from "./get-payments-by-sale";
+export * from "./update-payment-status";

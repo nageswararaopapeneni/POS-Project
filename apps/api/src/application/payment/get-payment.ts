@@ -41,10 +41,11 @@ export class GetPaymentUseCase {
       };
     }
 
-    const payment = await this.paymentRepository.findById(
-      businessId,
-      paymentId,
-    );
+    const payment =
+      await this.paymentRepository.findById(
+        businessId,
+        paymentId,
+      );
 
     if (!payment) {
       return {
@@ -62,10 +63,12 @@ export class GetPaymentUseCase {
       saleId: payment.saleId,
       amount: payment.amount,
       method: payment.method,
-      provider: payment.provider,
       status: payment.status,
-      externalReference: payment.externalReference,
+      provider: payment.provider,
+      externalReference:
+        payment.externalReference,
       reference: payment.reference,
+      idempotencyKey: payment.idempotencyKey,
       createdAt: payment.createdAt,
       updatedAt: payment.updatedAt,
     });
@@ -103,10 +106,11 @@ export class GetSalePaymentsUseCase {
       };
     }
 
-    const payments = await this.paymentRepository.findBySaleId(
-      businessId,
-      saleId,
-    );
+    const payments =
+      await this.paymentRepository.findBySaleId(
+        businessId,
+        saleId,
+      );
 
     return success(
       payments.map((payment) => ({
@@ -115,10 +119,13 @@ export class GetSalePaymentsUseCase {
         saleId: payment.saleId,
         amount: payment.amount,
         method: payment.method,
-        provider: payment.provider,
         status: payment.status,
-        externalReference: payment.externalReference,
+        provider: payment.provider,
+        externalReference:
+          payment.externalReference,
         reference: payment.reference,
+        idempotencyKey:
+          payment.idempotencyKey,
         createdAt: payment.createdAt,
         updatedAt: payment.updatedAt,
       })),

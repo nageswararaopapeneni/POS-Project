@@ -30,4 +30,8 @@ export class CreatePaymentDto {
   @IsOptional()
   @IsString()
   reference?: string | null;
+
+  @IsOptional()
+  @IsString()
+  idempotencyKey?: string | null;
 }

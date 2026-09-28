@@ -51,10 +51,13 @@ export class GetPaymentsBySaleUseCase {
         saleId: payment.saleId,
         amount: payment.amount,
         method: payment.method,
-        provider: payment.provider,
         status: payment.status,
-        externalReference: payment.externalReference,
+        provider: payment.provider,
+        externalReference:
+          payment.externalReference,
         reference: payment.reference,
+        idempotencyKey:
+          payment.idempotencyKey,
         createdAt: payment.createdAt,
         updatedAt: payment.updatedAt,
       })),
