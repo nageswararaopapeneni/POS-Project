@@ -5,4 +5,5 @@ export const REPOSITORY_TOKENS = {
   payment: Symbol("PaymentRepository"),
   receipt: Symbol("ReceiptRepository"),
   user: Symbol("UserRepository"),
+  report: Symbol("ReportRepository"),
 } as const;

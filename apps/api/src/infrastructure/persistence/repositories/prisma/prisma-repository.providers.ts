@@ -4,6 +4,7 @@ import type {
   PaymentRepository,
   ProductRepository,
   ReceiptRepository,
+  ReportRepository,
   SaleRepository,
   UserRepository,
 } from "../../../../application";
@@ -11,6 +12,7 @@ import { PrismaBusinessRepository } from "./prisma-business-repository";
 import { PrismaPaymentRepository } from "./prisma-payment-repository";
 import { PrismaProductRepository } from "./prisma-product-repository";
 import { PrismaReceiptRepository } from "./prisma-receipt-repository";
+import { PrismaReportRepository } from "./prisma-report-repository";
 import { PrismaSaleRepository } from "./prisma-sale-repository";
 import { PrismaUserRepository } from "./prisma-user-repository";
 import { REPOSITORY_TOKENS } from "./prisma-repository.tokens";
@@ -40,6 +42,10 @@ export const prismaRepositoryProviders: Provider[] = [
     provide: REPOSITORY_TOKENS.user,
     useClass: PrismaUserRepository,
   },
+  {
+    provide: REPOSITORY_TOKENS.report,
+    useClass: PrismaReportRepository,
+  },
 ];
 
 export const repositoryExports = [
@@ -49,6 +55,7 @@ export const repositoryExports = [
   REPOSITORY_TOKENS.payment,
   REPOSITORY_TOKENS.receipt,
   REPOSITORY_TOKENS.user,
+  REPOSITORY_TOKENS.report,
 ];
 
 export type RepositoryProviderContracts = {
@@ -58,4 +65,5 @@ export type RepositoryProviderContracts = {
   payment: PaymentRepository;
   receipt: ReceiptRepository;
   user: UserRepository;
+  report: ReportRepository;
 };
