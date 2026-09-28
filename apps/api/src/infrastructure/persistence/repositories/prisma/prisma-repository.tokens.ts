@@ -6,4 +6,5 @@ export const REPOSITORY_TOKENS = {
   receipt: Symbol("ReceiptRepository"),
   user: Symbol("UserRepository"),
   report: Symbol("ReportRepository"),
+  reconciliation: Symbol("ReconciliationRepository"),
 } as const;

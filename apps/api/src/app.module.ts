@@ -5,6 +5,7 @@ import { HealthModule } from "./modules/health";
 import { PaymentModule } from "./modules/payment";
 import { ProductModule } from "./modules/product";
 import { ReceiptModule } from "./modules/receipt";
+import { ReconciliationModule } from "./modules/reconciliation";
 import { ReportsModule } from "./modules/reports";
 import { SaleModule } from "./modules/sale";
 import { SalesHistoryModule } from "./modules/sales-history";
@@ -20,6 +21,7 @@ import { SalesHistoryModule } from "./modules/sales-history";
     ReceiptModule,
     SalesHistoryModule,
     ReportsModule,
+    ReconciliationModule,
   ],
 })
 export class AppModule {}

@@ -17,6 +17,7 @@ model Business {
   sales    Sale[]
   receipts Receipt[]
   users    User[]
+  reconciliations Reconciliation[]
 
   @@index([name])
 }
@@ -127,4 +128,29 @@ model Receipt {
   @@unique([businessId, receiptNumber])
   @@index([businessId])
   @@index([businessId, receiptNumber])
+}
+
+model Reconciliation {
+  id             String   @id @default(uuid())
+  businessId     String
+  businessDate   DateTime @db.Date
+  totalSales     Decimal  @db.Decimal(12, 2)
+  cashTotal      Decimal  @db.Decimal(12, 2)
+  upiTotal       Decimal  @db.Decimal(12, 2)
+  cardTotal      Decimal  @db.Decimal(12, 2)
+  otherTotal     Decimal  @db.Decimal(12, 2)
+  expectedCash   Decimal  @db.Decimal(12, 2)
+  actualCash     Decimal  @db.Decimal(12, 2)
+  cashDifference Decimal  @db.Decimal(12, 2)
+  status         String
+  closedBy       String?
+  closedAt       DateTime @default(now())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  business Business @relation(fields: [businessId], references: [id])
+
+  @@unique([businessId, businessDate])
+  @@index([businessId])
+  @@index([businessId, businessDate])
 }
