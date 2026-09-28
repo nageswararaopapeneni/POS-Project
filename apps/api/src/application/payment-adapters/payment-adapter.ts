@@ -9,6 +9,7 @@ export interface PaymentAdapterRequest {
   readonly provider?: string | null;
   readonly externalReference?: string | null;
   readonly reference?: string | null;
+  readonly idempotencyKey?: string | null;
 }
 
 export interface PaymentAdapterResult {
