@@ -23,9 +23,7 @@ export class PaymentAdapterRegistry {
     return adapter;
   }
 
-  async process(
-    request: PaymentAdapterRequest,
-  ) {
+  async process(request: PaymentAdapterRequest) {
     const adapter = this.getAdapter(request.method);
 
     return adapter.process(request);

@@ -1,11 +1,15 @@
 import {
   ApplicationError,
   ApplicationResult,
+  CreatePaymentRecord,
   PaymentRepository,
   SaleRepository,
-  CreatePaymentRecord,
   success,
 } from "../index";
+import {
+  isPaymentMethod,
+  PaymentAdapterRegistry,
+} from "../payment-adapters";
 import { CreatePaymentInput } from "./payment-input";
 import { PaymentOutput } from "./payment-output";
 
@@ -13,6 +17,7 @@ export class CreatePaymentUseCase {
   constructor(
     private readonly saleRepository: SaleRepository,
     private readonly paymentRepository: PaymentRepository,
+    private readonly paymentAdapterRegistry: PaymentAdapterRegistry,
   ) {}
 
   async execute(
@@ -20,7 +25,7 @@ export class CreatePaymentUseCase {
   ): Promise<ApplicationResult<PaymentOutput>> {
     const businessId = input.businessId.trim();
     const saleId = input.saleId.trim();
-    const method = input.method.trim();
+    const method = input.method.trim().toLowerCase();
     const reference = input.reference?.trim() || null;
 
     if (!businessId) {
@@ -59,6 +64,16 @@ export class CreatePaymentUseCase {
         error: new ApplicationError(
           "VALIDATION_ERROR",
           "Payment method is required.",
+        ),
+      };
+    }
+
+    if (!isPaymentMethod(method)) {
+      return {
+        success: false,
+        error: new ApplicationError(
+          "VALIDATION_ERROR",
+          "Unsupported payment method.",
         ),
       };
     }
@@ -110,13 +125,22 @@ export class CreatePaymentUseCase {
       };
     }
 
+    const adapterResult =
+      await this.paymentAdapterRegistry.process({
+        businessId,
+        saleId,
+        amount: input.amount,
+        method,
+        reference,
+      });
+
     const record: CreatePaymentRecord = {
       businessId,
       saleId,
       amount: input.amount,
       method,
-      status: "successful",
-      reference,
+      status: adapterResult.status,
+      reference: adapterResult.reference ?? reference,
     };
 
     const payment = await this.paymentRepository.create(record);
