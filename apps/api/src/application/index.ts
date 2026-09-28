@@ -8,6 +8,7 @@ export * from "./sale";
 export * from "./payment";
 export * from "./receipt";
 export * from "./sales-history";
+export * from "./payment-adapters";
 
 export * from "./ports/business-repository";
 export * from "./ports/product-repository";
